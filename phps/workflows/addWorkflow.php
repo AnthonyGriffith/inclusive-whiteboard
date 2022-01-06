@@ -18,7 +18,7 @@ try {
   $result = ejecutar_query($conn2, "INSERT INTO workflows (id_user, name, description) VALUES ($id_user, '$name', '$description') RETURNING *");
   if ($row=pg_fetch_row ($result))
   {
-      echo json_encode(array('result'=> true));
+      echo json_encode(array('id'=>$row[0],'result'=> true));
   }
 } catch (\Throwable $th) {
   

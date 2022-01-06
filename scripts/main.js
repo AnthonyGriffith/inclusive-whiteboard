@@ -12,7 +12,7 @@ let editingWorkflow = false;
 let counter;
 
 function logout() {
-  window.localStorage.removeItem('user');
+  window.localStorage.clear();
   window.location = '../htmls/index.html';
 }
 window.logout = logout;
@@ -37,7 +37,7 @@ async function getWorkflows() {
     workflowCb.insertAdjacentHTML('afterbegin', markup);
   });
 
-  showWorkflowStates();
+  showWorkflowStates(true);
 }
 
 async function addWorkflow() {
@@ -59,11 +59,11 @@ async function addWorkflow() {
   if (data.result) {
     alert('Workflow agregado correctamente');
   }
-
   workflowName.value = '';
   workflowDescription.value = '';
-
-  getWorkflows();
+  await getWorkflows();
+  const optionEl = document.querySelector(`[data-id~="${data.id}"]`);
+  workflowCb.value = optionEl.value;
   modal.style.display = 'none';
 }
 window.addWorkflow = addWorkflow;
@@ -88,8 +88,6 @@ async function editWorkflow() {
   if (data.result) {
     alert('Workflow editado correctamente');
   }
-
-  console.log(selectedWorkflow);
   selectedWorkflow.innerHTML = workflowName.value;
   workflowName.value = '';
   workflowDescription.value = '';
@@ -102,6 +100,7 @@ async function deleteWorkflow() {
   const id_workflow = workflowCb.options[workflowCb.selectedIndex]?.dataset.id;
   const formData = newFormData({ id_workflow });
   await postJSON('../phps/workflows/deleteWorkflow.php', formData);
+  window.localStorage.removeItem('lastWorkflow');
   location.reload();
 }
 window.deleteWorkflow = deleteWorkflow;
@@ -142,8 +141,18 @@ function toggleModal() {
   };
 }
 
-async function showWorkflowStates() {
+async function showWorkflowStates(first = false) {
+  if (first === true) {
+    const lastWorkflowId = JSON.parse(window.localStorage.getItem('lastWorkflow'));
+    if (lastWorkflowId) {
+      const optionEl = document.querySelector(`[data-id~="${lastWorkflowId}"]`);
+      workflowCb.value = optionEl.value;
+    }
+  }
+
   const id_workflow = workflowCb.options[workflowCb.selectedIndex]?.dataset.id;
+
+  JSON.stringify(window.localStorage.setItem('lastWorkflow', id_workflow));
 
   const formData = newFormData({ id_workflow });
   const statesArray = await postJSON('../phps/states/getStates.php', formData);
@@ -244,7 +253,6 @@ async function showWorkflowStates() {
 
         const formData = newFormData({ id_state, category });
         const edit = await postJSON('../phps/states/editState.php', formData);
-        console.log(edit);
       }
     });
 
