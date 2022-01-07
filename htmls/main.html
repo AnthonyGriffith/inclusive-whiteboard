@@ -13,8 +13,8 @@
     <header class="main-header">
       <h2>FANCYBOARD</h2>
 
-      <div class="workflows-header">
-        <label for="workflow"><strong>Workflow</strong></label>
+      <div>
+        <label><strong>Workflow</strong></label>
         <select name="workflow" id="workflow-cb"></select>
         <button id="new-workflow" class="btn-header">New</button>
         <button onclick="deleteWorkflow()" class="btn-header">Delete</button>
@@ -25,7 +25,7 @@
       <button onclick="logout()" class="btn-header">Sign out</button>
     </header>
 
-    <section class="state-container hidden"></section>
+    <div class="state-container hidden"></div>
 
     <div id="myModal" class="modal">
       <!-- Modal content -->
@@ -34,20 +34,20 @@
         <div class="form-wrapper">
           <form class="new-workflow-form">
             <table>
-              <thead align="center">
+              <thead style="text-align: center">
                 <tr>
                   <td colspan="2"><h3>Workflow Form</h3></td>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><label for="name">Name</label></td>
+                  <td><label>Name</label></td>
                   <td>
                     <input id="new-workflow-name" type="text" name="name" />
                   </td>
                 </tr>
                 <tr>
-                  <td><label for="description">Description</label></td>
+                  <td><label>Description</label></td>
                   <td>
                     <input
                       id="new-workflow-description"
@@ -57,7 +57,7 @@
                   </td>
                 </tr>
               </tbody>
-              <tfoot align="center">
+              <tfoot style="text-align: center">
                 <tr>
                   <td colspan="2">
                     <button class="modal-btnAccept">Accept</button>
@@ -76,14 +76,14 @@
         <div class="form-wrapper">
           <form class="new-state-form">
             <table>
-              <thead align="center">
+              <thead style="text-align: center">
                 <tr>
                   <td colspan="2"><h3>New State Form</h3></td>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><label for="category">Category</label></td>
+                  <td><label>Category</label></td>
                   <td>
                     <input
                       id="new-state-category"
@@ -94,7 +94,7 @@
                   </td>
                 </tr>
               </tbody>
-              <tfoot align="center">
+              <tfoot style="text-align: center">
                 <tr>
                   <td colspan="2">
                     <button onclick="">Add</button>
