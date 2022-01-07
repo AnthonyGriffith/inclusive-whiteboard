@@ -1,6 +1,6 @@
 import { newFormData, postJSON } from './helpers.js';
 import { newCardMarkup, newCardListeners, movedCard } from './cards.js';
-import { readWorkflow, pause, resume } from './textToSpeech.js';
+import { readWorkflow } from './textToSpeech.js';
 
 const userId = JSON.parse(window.localStorage.getItem('user'))?.id_user;
 const modal = document.getElementById('myModal');
@@ -353,13 +353,12 @@ stateForm.addEventListener('submit', async (e) => {
 
 workflowCb.addEventListener('change', showWorkflowStates);
 
+
 function init() {
   verifyLogin();
   getWorkflows();
   toggleModal();
   window.readWorkflow = readWorkflow;
-  window.pause = pause;
-  window.resume = resume;
 }
 
 init();

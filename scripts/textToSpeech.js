@@ -3,34 +3,55 @@ import { workflowCb } from './main.js';
 
 let utter = new SpeechSynthesisUtterance();
 let synth = window.speechSynthesis;
+let paused = true;
+let event;
+let string;
+let firstLoad = true;
+
+
+
+string = window.localStorage.getItem('savedString') || '';
 
 export async function readWorkflow() {
-    const string = await getString();
-    console.log(string.length);
-    speak(string);
+    if (string) {
+        speak(string);
+    } else {
+        string = await getString();
+        speak(string);
+    }
 }
 
-export function pause() {
+function pause() {
     synth.pause();
 }
 
-export function resume() {
+function resume() {
+    if (firstLoad) {
+        readWorkflow();
+        firstLoad = false;
+    } else {
+        synth.resume();
+    }
+}
+
+function cancel() {
     synth.cancel();
 }
 
 function speak(text) {
     utter.lang = "en-En";
     utter.volume = 0.5;
-    utter.onend = function () {
-        console.log("termino de reproducir");
-    };
-    utter.onboundary = function (event) {
-        console.log(event);
+    utter.onboundary = function (e) {
+        event = e;
     }
+    utter.onend = function () {
+        window.localStorage.removeItem('savedString');
+    };
     utter.text = text;
     synth.speak(utter);
 }
 
+//Get final string for speak function.
 async function getString() {
     let finalString = '';
 
@@ -69,8 +90,30 @@ async function getString() {
     return finalString;
 }
 
-utter.addEventListener('pause', function (event) {
-    console.log(event);
-    console.log('Speech paused after ' + event.elapsedTime / 1000 + ' seconds.');
+
+
+// const btnTalk = document.querySelector('.btn-talk');
+// btnTalk.addEventListener('click', function () {
+//     readWorkflow();
+// });
+
+const btnPauseResume = document.querySelector('.btn-pause_resume');
+btnPauseResume.addEventListener('click', function () {
+    paused = !paused;
+
+    //Este lo pausa y guarda en local storage
+    if (paused) {
+        pause();
+        const savedString = string.slice(event.charIndex, -1);
+        window.localStorage.setItem('savedString', savedString);
+    }
+
+    //ESTE REANUDA
+    if (!paused) {
+        resume();
+    }
 });
 
+window.addEventListener('unload', function () {
+    cancel();
+})
